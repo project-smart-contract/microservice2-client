@@ -1,4 +1,4 @@
-package ma.fstt.microservice2;
+package ma.fstt.microservice2client;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,11 +7,11 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan("ma.fstt.microservice2.restController")
-public class Microservice2Application {
+@ComponentScan("ma.fstt.microservice2client.restController")
+public class Microservice2ClientApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Microservice2Application.class, args);
+		SpringApplication.run(Microservice2ClientApplication.class, args);
 	}
 
 }

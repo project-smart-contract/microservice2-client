@@ -1,4 +1,4 @@
-package ma.fstt.microservice2.restController;
+package ma.fstt.microservice2client.restController;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +15,6 @@ public class ExchangeRestController {
     @GetMapping("/{msg}")
     public String Service2(@PathVariable String msg){
 
-        return "Microservice 2 : "+ msg;
+        return "Microservice 2 AFTER DOCKERFILE: "+ msg;
     }
 }

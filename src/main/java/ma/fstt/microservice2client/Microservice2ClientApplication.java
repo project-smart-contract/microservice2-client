@@ -7,7 +7,11 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan("ma.fstt.microservice2client.restController")
+@ComponentScan("ma.fstt.microservice2client.controlleur")
+@ComponentScan("ma.fstt.microservice2client.service")
+@ComponentScan("ma.fstt.microservice2client.repository")
+
+
 public class Microservice2ClientApplication {
 
 	public static void main(String[] args) {

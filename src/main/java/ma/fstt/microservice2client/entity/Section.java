@@ -20,7 +20,10 @@ public class Section {
     private int numOrdre;
     private String texte;
 
-    @ManyToOne
-    @JoinColumn(name="contrat_id", nullable=false)
-    private Contrat contrat;
+    public void setContrat(Contrat contrat) {
+    }
+
+//    @ManyToOne
+//    @JoinColumn(name="contrat_id", nullable=false)
+//    private Contrat contrat;
 }

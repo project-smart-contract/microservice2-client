@@ -18,11 +18,8 @@ public class Contrat {
     //private String typeUsage;
     private String numPolice;
     private Date dateDebut;
-    private Date echeance;
+    private String echeance;
     private Date dateEcheance;
-
-    @OneToMany(mappedBy = "contrat")
-    private List<Section> sections = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -30,4 +27,11 @@ public class Contrat {
             joinColumns = @JoinColumn(name = "contrat_id"),
             inverseJoinColumns = @JoinColumn(name = "vehicule_id"))
     private List<Vehicule> vehicules = new ArrayList<>();
+
+
+//    @OneToMany(mappedBy = "contrat", cascade = CascadeType.ALL)
+//    private List<Section> sections = new ArrayList<>();
+
+
+
 }

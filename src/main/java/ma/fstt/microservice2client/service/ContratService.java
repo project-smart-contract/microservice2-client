@@ -9,13 +9,16 @@ import ma.fstt.microservice2client.entity.Section;
 import ma.fstt.microservice2client.entity.Vehicule;
 import ma.fstt.microservice2client.repository.ContratRepository;
 import ma.fstt.microservice2client.repository.SectionRepository;
-import ma.fstt.microservice2client.repository.VehiculeRepository;
+import ma.fstt.microservice2client.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import ma.fstt.microservice2client.entity.Client;
 
 @Service
 public class ContratService {
@@ -24,21 +27,91 @@ public class ContratService {
     private ContratRepository contratRepository;
     @Autowired
     private SectionRepository sectionRepository;
+    @Autowired
+    private ClientRepository clientRepository;
 
-    public Contrat ajouterContrat(Contrat contrat) {
+
+    public Contrat ajouterContrat(Contrat contrat, int idClient) {
+        contrat.setIdClient(idClient);
         return contratRepository.save(contrat);
     }
 
 
+
     public Section ajouterSection(Section section) {
+
+
         return sectionRepository.save(section);
     }
 
+//    @KafkaListener(topics = "client-info", groupId = "user-group")
+//    public void listen(String message) {
+//        System.out.println("Received message: " + message);}
 
     @KafkaListener(topics = "client-info", groupId = "user-group")
     public void listen(String message) {
         System.out.println("Received message: " + message);
-        // Traitez le message reçu
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Client client = mapper.readValue(message, Client.class);
+            Client clientEntity = new Client();
+            clientEntity.setId(client.getId());
+            clientEntity.setEmail(client.getEmail());
+            clientEntity.setPassword(client.getPassword());
+            clientEntity.setNomSoc(client.getNomSoc());
+            clientEntity.setNumSocie(client.getNumSocie());
+            clientRepository.save(clientEntity);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Autowired
+    private VehiculeRepository vehiculeRepository;
+    public Vehicule ajouterVehicule(Vehicule vehicule, int idClient) {
+        vehicule.setIdClient(idClient);
+        return vehiculeRepository.save(vehicule);
+    }
+    public Map<String, Object> getContratAndVehiculeByIdClient(int idClient) {
+        Client client = clientRepository.findById(idClient).orElse(null);
+        List<Contrat> contrats = contratRepository.findByIdClient(idClient);
+        List<Vehicule> vehicules = vehiculeRepository.findByIdClient(idClient);
+        Map<String, Object> result = new HashMap<>();
+        result.put("client", client);
+        result.put("contrats", contrats);
+        //result.put("vehicules", vehicules);
+        return result;
+    }
+
+//    @Autowired
+//    private ContratRepository contratRepository;
+//    @Autowired
+//    private SectionRepository sectionRepository;
+//
+//    public Contrat ajouterContrat(Contrat contrat) {
+//        return contratRepository.save(contrat);
+//    }
+//
+//
+//    public Section ajouterSection(Section section) {
+//        return sectionRepository.save(section);
+//    }
+//
+//
+//    @KafkaListener(topics = "client-info", groupId = "user-group")
+//    public void listen(String message) {
+//        System.out.println("Received message: " + message);}
+//
+//    @Autowired
+//    private VehiculeRepository vehiculeRepository;
+//
+//    public Vehicule ajouterVehicule(Vehicule vehicule) {
+//
+//        return vehiculeRepository.save(vehicule);
+//    }
+
+    // Traitez le message reçu
         // Par exemple, vous pouvez convertir le message JSON en un objet UserCredential
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        try {
@@ -47,7 +120,7 @@ public class ContratService {
 //        } catch (JsonProcessingException e) {
 //            throw new RuntimeException("Failed to convert JSON to UserCredential", e);
 //        }
-    }
+   // }
 
 
 //    public Contrat createContract(Contrat contrat) {
@@ -135,12 +208,6 @@ public class ContratService {
 //    return contratRepository.save(contrat);
 //}
 
-    @Autowired
-    private VehiculeRepository vehiculeRepository;
-
-    public Vehicule ajouterVehicule(Vehicule vehicule) {
-        return vehiculeRepository.save(vehicule);
-    }
 
 }
 

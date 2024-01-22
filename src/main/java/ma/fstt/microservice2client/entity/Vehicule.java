@@ -1,5 +1,6 @@
 package ma.fstt.microservice2client.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +25,10 @@ public class Vehicule {
     private String www;
     private String vehicule_type;
     private int anneeModel;
+    private int idClient;
 
     @ManyToMany(mappedBy = "vehicules")
+    @JsonIgnore
+    //@JsonBackReference
     private List<Contrat> contrats = new ArrayList<>();
 }

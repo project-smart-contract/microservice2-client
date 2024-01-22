@@ -1,6 +1,8 @@
 // Service
 package ma.fstt.microservice2client.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import ma.fstt.microservice2client.entity.Contrat;
 import ma.fstt.microservice2client.entity.Section;
@@ -9,6 +11,7 @@ import ma.fstt.microservice2client.repository.ContratRepository;
 import ma.fstt.microservice2client.repository.SectionRepository;
 import ma.fstt.microservice2client.repository.VehiculeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +32,21 @@ public class ContratService {
 
     public Section ajouterSection(Section section) {
         return sectionRepository.save(section);
+    }
+
+
+    @KafkaListener(topics = "client-info", groupId = "user-group")
+    public void listen(String message) {
+        System.out.println("Received message: " + message);
+        // Traitez le message reçu
+        // Par exemple, vous pouvez convertir le message JSON en un objet UserCredential
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        try {
+//            UserCredential userCredential = objectMapper.readValue(message, UserCredential.class);
+//            // Faites quelque chose avec l'objet UserCredential
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException("Failed to convert JSON to UserCredential", e);
+//        }
     }
 
 

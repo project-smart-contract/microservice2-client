@@ -60,6 +60,14 @@ public class ContratService {
             clientEntity.setPassword(client.getPassword());
             clientEntity.setNomSoc(client.getNomSoc());
             clientEntity.setNumSocie(client.getNumSocie());
+            clientEntity.setPrenom(client.getPrenom());
+            clientEntity.setNom(client.getNom());
+            clientEntity.setNumPermis(client.getNumPermis());
+            clientEntity.setCin(client.getCin());
+            clientEntity.setAdresse(client.getAdresse());
+            clientEntity.setDateNaissance(client.getDateNaissance());
+            clientEntity.setNumeroTelephone(client.getNumeroTelephone());
+            
             clientRepository.save(clientEntity);
 
         } catch (JsonProcessingException e) {

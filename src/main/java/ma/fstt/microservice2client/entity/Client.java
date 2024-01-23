@@ -20,5 +20,15 @@ public class Client {
     private String nomSoc;
     private String numSocie;
 
+
+    private String nom;
+    private String prenom;
+    private String numeroTelephone;
+    private String dateNaissance;
+
+    private String adresse;
+    private String cin;
+    private String numPermis;
+
     // getters et setters...
 }

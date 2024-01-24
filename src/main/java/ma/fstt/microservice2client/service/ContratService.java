@@ -75,6 +75,34 @@ public class ContratService {
         }
     }
 
+    @KafkaListener(topics = "formule-info", groupId = "user-group")
+    public void receiveFormule(String formuleJson) {
+        System.out.println("Received message: " + formuleJson);
+        //ObjectMapper mapper = new ObjectMapper();
+
+//        try {
+//            Client client = mapper.readValue(formuleJson, Client.class);
+//            Client clientEntity = new Client();
+//            clientEntity.setId(client.getId());
+//            clientEntity.setEmail(client.getEmail());
+//            clientEntity.setPassword(client.getPassword());
+//            clientEntity.setNomSoc(client.getNomSoc());
+//            clientEntity.setNumSocie(client.getNumSocie());
+//            clientEntity.setPrenom(client.getPrenom());
+//            clientEntity.setNom(client.getNom());
+//            clientEntity.setNumPermis(client.getNumPermis());
+//            clientEntity.setCin(client.getCin());
+//            clientEntity.setAdresse(client.getAdresse());
+//            clientEntity.setDateNaissance(client.getDateNaissance());
+//            clientEntity.setNumeroTelephone(client.getNumeroTelephone());
+//
+//            clientRepository.save(clientEntity);
+//
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+    }
+
     @Autowired
     private VehiculeRepository vehiculeRepository;
     public Vehicule ajouterVehicule(Vehicule vehicule, int idClient) {

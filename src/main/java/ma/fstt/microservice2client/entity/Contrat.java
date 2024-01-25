@@ -25,6 +25,14 @@ public class Contrat {
     private  boolean isActive ;
     private  Long idFormule ;
 
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
     @ManyToMany
     @JoinTable(
             name = "contrat_vehicule",

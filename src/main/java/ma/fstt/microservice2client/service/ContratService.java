@@ -8,6 +8,7 @@ import ma.fstt.microservice2client.entity.*;
 import ma.fstt.microservice2client.repository.ContratRepository;
 import ma.fstt.microservice2client.repository.SectionRepository;
 import ma.fstt.microservice2client.repository.*;
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,12 @@ public class ContratService {
     public Section ajouterSection(Section section) {
 
         return sectionRepository.save(section);
+    }
+
+    public Contrat activerContrat(int id) {
+        Contrat contrat = contratRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Contrat"));
+        contrat.setIsActive(!contrat.getIsActive());
+        return contratRepository.save(contrat);
     }
 
 //    @KafkaListener(topics = "client-info", groupId = "user-group")

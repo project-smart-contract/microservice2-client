@@ -36,6 +36,11 @@ public class ContratControlleur {
 //        return contratService.ajouterContrat(contrat, idClient);
 //    }
 
+    @PutMapping("/activerContrat/{id}")
+    public ResponseEntity<Contrat> activerContrat(@PathVariable(value = "id") int contratId) {
+        Contrat contrat = contratService.activerContrat(contratId);
+        return ResponseEntity.ok().body(contrat);
+    }
     @PostMapping("/ajouterContrat")
     public Contrat ajouterContratF(@RequestBody Contrat contrat) {
         int idClient = contrat.getIdClient();

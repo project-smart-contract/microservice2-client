@@ -33,6 +33,14 @@ public class Contrat {
     //@JsonManagedReference
     private List<Vehicule> vehicules = new ArrayList<>();
 
+    public void setIsActive(boolean b) {
+
+    }
+
+    public boolean getIsActive() {
+        return  isActive ;
+    }
+
 
 //    @OneToMany(mappedBy = "contrat", cascade = CascadeType.ALL)
 //    private List<Section> sections = new ArrayList<>();

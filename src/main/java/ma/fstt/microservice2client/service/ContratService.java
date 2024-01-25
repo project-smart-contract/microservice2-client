@@ -10,6 +10,7 @@ import ma.fstt.microservice2client.entity.Vehicule;
 import ma.fstt.microservice2client.repository.ContratRepository;
 import ma.fstt.microservice2client.repository.SectionRepository;
 import ma.fstt.microservice2client.repository.*;
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,11 @@ public class ContratService {
         contrat.setIdClient(idClient);
         return contratRepository.save(contrat);
     }
+    public Contrat activerContrat(int id) {
+        Contrat contrat = contratRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Contrat"));
+        contrat.setIsActive(!contrat.getIsActive());
+        return contratRepository.save(contrat);
+    }
 
 
 
@@ -48,39 +54,42 @@ public class ContratService {
 //    public void listen(String message) {
 //        System.out.println("Received message: " + message);}
 
-    @KafkaListener(topics = "client-info", groupId = "user-group")
-    public void listen(String message) {
-        System.out.println("Received message: " + message);
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Client client = mapper.readValue(message, Client.class);
-            Client clientEntity = new Client();
-            clientEntity.setId(client.getId());
-            clientEntity.setEmail(client.getEmail());
-            clientEntity.setPassword(client.getPassword());
-            clientEntity.setNomSoc(client.getNomSoc());
-            clientEntity.setNumSocie(client.getNumSocie());
-            clientEntity.setPrenom(client.getPrenom());
-            clientEntity.setNom(client.getNom());
-            clientEntity.setNumPermis(client.getNumPermis());
-            clientEntity.setCin(client.getCin());
-            clientEntity.setAdresse(client.getAdresse());
-            clientEntity.setDateNaissance(client.getDateNaissance());
-            clientEntity.setNumeroTelephone(client.getNumeroTelephone());
-            
-            clientRepository.save(clientEntity);
+//    @KafkaListener(topics = "client-info", groupId = "user-group")
+//    public void listen(String message) {
+//        System.out.println("Received message: " + message);
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            Client client = mapper.readValue(message, Client.class);
+//            Client clientEntity = new Client();
+//            clientEntity.setId(client.getId());
+//            clientEntity.setEmail(client.getEmail());
+//            clientEntity.setPassword(client.getPassword());
+//            clientEntity.setNomSoc(client.getNomSoc());
+//            clientEntity.setNumSocie(client.getNumSocie());
+//            clientEntity.setPrenom(client.getPrenom());
+//            clientEntity.setNom(client.getNom());
+//            clientEntity.setNumPermis(client.getNumPermis());
+//            clientEntity.setCin(client.getCin());
+//            clientEntity.setAdresse(client.getAdresse());
+//            clientEntity.setDateNaissance(client.getDateNaissance());
+//            clientEntity.setNumeroTelephone(client.getNumeroTelephone());
+//
+//            clientRepository.save(clientEntity);
+//
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
 
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     @KafkaListener(topics = "formule-info", groupId = "user-group")
     public void receiveFormule(String formuleJson) {
         System.out.println("Received message: " + formuleJson);
-        ObjectMapper mapper = new ObjectMapper();
+        //ObjectMapper mapper = new ObjectMapper();
 
-  try {
+//  try {
 //            Client client = mapper.readValue(formuleJson, Client.class);
 //            Client clientEntity = new Client();
 //            clientEntity.setId(client.getId());

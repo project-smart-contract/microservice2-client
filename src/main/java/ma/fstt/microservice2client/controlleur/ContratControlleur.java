@@ -34,6 +34,12 @@ public Contrat ajouterContrat(@RequestBody Contrat contrat) {
     return contratService.ajouterContrat(contrat, idClient);
 }
 
+    @PutMapping("/activerContrat/{id}")
+    public ResponseEntity<Contrat> activerContrat(@PathVariable(value = "id") int contratId) {
+        Contrat contrat = contratService.activerContrat(contratId);
+        return ResponseEntity.ok().body(contrat);
+    }
+
 
     @PostMapping("/ajouterVehicule")
     public Vehicule ajouterVehicule(@RequestBody Vehicule vehicule) {

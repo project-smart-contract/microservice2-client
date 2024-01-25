@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import ma.fstt.microservice2client.entity.Client;
 
 @Service
@@ -29,13 +30,14 @@ public class ContratService {
     private SectionRepository sectionRepository;
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private VehiculeRepository vehiculeRepository;
 
 
     public Contrat ajouterContrat(Contrat contrat, int idClient) {
         contrat.setIdClient(idClient);
         return contratRepository.save(contrat);
     }
-
 
 
     public Section ajouterSection(Section section) {
@@ -67,7 +69,7 @@ public class ContratService {
             clientEntity.setAdresse(client.getAdresse());
             clientEntity.setDateNaissance(client.getDateNaissance());
             clientEntity.setNumeroTelephone(client.getNumeroTelephone());
-            
+
             clientRepository.save(clientEntity);
 
         } catch (JsonProcessingException e) {
@@ -79,8 +81,9 @@ public class ContratService {
     public void receiveFormule(String formuleJson) {
         System.out.println("Received message: " + formuleJson);
         ObjectMapper mapper = new ObjectMapper();
+    }
 
-  try {
+//  try {
 //            Client client = mapper.readValue(formuleJson, Client.class);
 //            Client clientEntity = new Client();
 //            clientEntity.setId(client.getId());
@@ -101,14 +104,13 @@ public class ContratService {
 //        } catch (JsonProcessingException e) {
 //            e.printStackTrace();
 //        }
-    }
+//    }
 
-    @Autowired
-    private VehiculeRepository vehiculeRepository;
     public Vehicule ajouterVehicule(Vehicule vehicule, int idClient) {
         vehicule.setIdClient(idClient);
         return vehiculeRepository.save(vehicule);
     }
+
     public Map<String, Object> getContratAndVehiculeByIdClient(int idClient) {
         Client client = clientRepository.findById(idClient).orElse(null);
         List<Contrat> contrats = contratRepository.findByIdClient(idClient);
@@ -119,7 +121,7 @@ public class ContratService {
         //result.put("vehicules", vehicules);
         return result;
     }
-    }
+}
 
 //    @Autowired
 //    private ContratRepository contratRepository;
@@ -148,8 +150,8 @@ public class ContratService {
 //        return vehiculeRepository.save(vehicule);
 //    }
 
-    // Traitez le message reçu
-        // Par exemple, vous pouvez convertir le message JSON en un objet UserCredential
+// Traitez le message reçu
+// Par exemple, vous pouvez convertir le message JSON en un objet UserCredential
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        try {
 //            UserCredential userCredential = objectMapper.readValue(message, UserCredential.class);
@@ -157,7 +159,7 @@ public class ContratService {
 //        } catch (JsonProcessingException e) {
 //            throw new RuntimeException("Failed to convert JSON to UserCredential", e);
 //        }
-   // }
+// }
 
 
 //    public Contrat createContract(Contrat contrat) {
@@ -188,8 +190,6 @@ public class ContratService {
 //
 //        return contrat;
 //    }
-
-
 
 
 //        public Contrat createContract(Contrat contrat) {
@@ -246,7 +246,7 @@ public class ContratService {
 //}
 
 
-}
+
 
 
 

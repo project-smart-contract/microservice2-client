@@ -15,7 +15,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(method = {RequestMethod.POST,RequestMethod.GET} ,path = "/client")
+@RequestMapping(method = {RequestMethod.POST, RequestMethod.GET}, path = "/client")
 public class ContratControlleur {
 
     @Autowired
@@ -23,16 +23,16 @@ public class ContratControlleur {
     @Autowired
     private SectionService sectionService;
 
-//@PostMapping("/create")
+    //@PostMapping("/create")
 //public Contrat createContract(@RequestBody Contrat contrat) {
 //
 //    return contratService.createContractWithSectionsAndVehicles(contrat);
 //}
-@PostMapping("/ajouterContrat")
-public Contrat ajouterContrat(@RequestBody Contrat contrat) {
-    int idClient = contrat.getIdClient();
-    return contratService.ajouterContrat(contrat, idClient);
-}
+    @PostMapping("/ajouterContrat")
+    public Contrat ajouterContrat(@RequestBody Contrat contrat) {
+        int idClient = contrat.getIdClient();
+        return contratService.ajouterContrat(contrat, idClient);
+    }
 
 
     @PostMapping("/ajouterVehicule")
@@ -40,7 +40,6 @@ public Contrat ajouterContrat(@RequestBody Contrat contrat) {
         int idClient = vehicule.getIdClient();
         return contratService.ajouterVehicule(vehicule, idClient);
     }
-
 
 
     @PostMapping("/ajouterSection")
@@ -71,7 +70,9 @@ public Contrat ajouterContrat(@RequestBody Contrat contrat) {
 
 
     @GetMapping("")
-    public String hello(){return "hello";}
+    public String hello() {
+        return "hello";
+    }
 }
 
 

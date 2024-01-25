@@ -2,6 +2,7 @@
 package ma.fstt.microservice2client.controlleur;
 
 import ma.fstt.microservice2client.entity.Contrat;
+import ma.fstt.microservice2client.entity.Option;
 import ma.fstt.microservice2client.entity.Section;
 import ma.fstt.microservice2client.entity.Vehicule;
 import ma.fstt.microservice2client.service.ContratService;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -32,6 +34,14 @@ public class ContratControlleur {
     public Contrat ajouterContrat(@RequestBody Contrat contrat) {
         int idClient = contrat.getIdClient();
         return contratService.ajouterContrat(contrat, idClient);
+    }
+
+    @PostMapping("/ajouterContratF")
+    public Contrat ajouterContratF(@RequestBody Contrat contrat) {
+        int idClient = contrat.getIdClient();
+        int idFormule = contrat.getIdFormule();
+        List<Long> optionList = contrat.getOptionFormules();
+        return contratService.ajouterContratF(contrat, idClient,idFormule,optionList);
     }
 
 

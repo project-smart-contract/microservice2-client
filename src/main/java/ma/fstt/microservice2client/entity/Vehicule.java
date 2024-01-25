@@ -22,7 +22,7 @@ public class Vehicule {
     private String energieCarbu;
     private String marque;
     private String model;
-    private String www;
+    private boolean www;
     private String vehicule_type;
     private int anneeModel;
     private int idClient;

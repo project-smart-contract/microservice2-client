@@ -21,7 +21,8 @@ public class Option {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_option;
+    private Long id;
+//    private Long id_option;
 
     private String titre;
     private String description;

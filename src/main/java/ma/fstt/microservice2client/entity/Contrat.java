@@ -23,6 +23,7 @@ public class Contrat {
     private Date dateEcheance;
     private int idClient;
     private  boolean isActive ;
+    private  int idFormule ;
 
     @ManyToMany
     @JoinTable(
@@ -32,6 +33,11 @@ public class Contrat {
 
     //@JsonManagedReference
     private List<Vehicule> vehicules = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(name = "contrat_option_formules", joinColumns = @JoinColumn(name = "contrat_id"))
+    @Column(name = "option_formule_id")
+    private List<Long> optionFormules = new ArrayList<>();
 
 
 //    @OneToMany(mappedBy = "contrat", cascade = CascadeType.ALL)

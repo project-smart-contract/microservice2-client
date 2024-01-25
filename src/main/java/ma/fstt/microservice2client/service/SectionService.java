@@ -40,7 +40,7 @@ public class SectionService {
             section2.setTitre("Vehicule Assurée");
             section2.setSousTitre("Details de vehicule");
             section2.setNumOrdre(2);
-            section2.setTexte("Véhicule Immatriculation: " + vehicule.getImmatriculation() + ", Nombre de Places: " + vehicule.getNombrePlace() + ", Puissance CV: " + vehicule.getPuissanceCv() + ", Énergie Carburant: " + vehicule.getEnergieCarbu() + ", Marque: " + vehicule.getMarque() + ", Modèle: " + vehicule.getModel() + ", WWW: " + vehicule.getWww() + ", Type de Véhicule: " + vehicule.getVehicule_type() + ", Année du Modèle: " + vehicule.getAnneeModel());
+            section2.setTexte("Véhicule Immatriculation: " + vehicule.getImmatriculation() + ", Nombre de Places: " + vehicule.getNombrePlace() + ", Puissance CV: " + vehicule.getPuissanceCv() + ", Énergie Carburant: " + vehicule.getEnergieCarbu() + ", Marque: " + vehicule.getMarque() + ", Modèle: " + vehicule.getModel() + ", WWW: " + vehicule.isWww() + ", Type de Véhicule: " + vehicule.getVehicule_type() + ", Année du Modèle: " + vehicule.getAnneeModel());
             section2.setContrat(contrat);
             sectionRepository.save(section2);
         }

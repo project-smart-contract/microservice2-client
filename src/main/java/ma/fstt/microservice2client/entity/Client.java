@@ -30,5 +30,4 @@ public class Client {
     private String cin;
     private String numPermis;
 
-    // getters et setters...
 }

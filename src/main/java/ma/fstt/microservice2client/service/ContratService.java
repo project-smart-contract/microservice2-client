@@ -4,9 +4,7 @@ package ma.fstt.microservice2client.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
-import ma.fstt.microservice2client.entity.Contrat;
-import ma.fstt.microservice2client.entity.Section;
-import ma.fstt.microservice2client.entity.Vehicule;
+import ma.fstt.microservice2client.entity.*;
 import ma.fstt.microservice2client.repository.ContratRepository;
 import ma.fstt.microservice2client.repository.SectionRepository;
 import ma.fstt.microservice2client.repository.*;
@@ -19,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import ma.fstt.microservice2client.entity.Client;
-
 @Service
 public class ContratService {
 
@@ -32,6 +28,10 @@ public class ContratService {
     private ClientRepository clientRepository;
     @Autowired
     private VehiculeRepository vehiculeRepository;
+    @Autowired
+    private FormuleRepository formuleRepository;
+    @Autowired
+    private OptionRepository optionRepository;
 
 
     public Contrat ajouterContrat(Contrat contrat, int idClient) {
@@ -39,9 +39,15 @@ public class ContratService {
         return contratRepository.save(contrat);
     }
 
+    public Contrat ajouterContratF(Contrat contrat, int idClient,int idFormule, List<Long> optionList) {
+        contrat.setIdClient(idClient);
+        contrat.setIdFormule(idFormule);
+        contrat.setOptionFormules(optionList);
+        return contratRepository.save(contrat);
+    }
+
 
     public Section ajouterSection(Section section) {
-
 
         return sectionRepository.save(section);
     }
@@ -79,32 +85,53 @@ public class ContratService {
 
     @KafkaListener(topics = "formule-info", groupId = "user-group")
     public void receiveFormule(String formuleJson) {
+        System.out.println(" TEST ");
         System.out.println("Received message: " + formuleJson);
         ObjectMapper mapper = new ObjectMapper();
-    }
 
-//  try {
-//            Client client = mapper.readValue(formuleJson, Client.class);
-//            Client clientEntity = new Client();
-//            clientEntity.setId(client.getId());
-//            clientEntity.setEmail(client.getEmail());
-//            clientEntity.setPassword(client.getPassword());
-//            clientEntity.setNomSoc(client.getNomSoc());
-//            clientEntity.setNumSocie(client.getNumSocie());
-//            clientEntity.setPrenom(client.getPrenom());
-//            clientEntity.setNom(client.getNom());
-//            clientEntity.setNumPermis(client.getNumPermis());
-//            clientEntity.setCin(client.getCin());
-//            clientEntity.setAdresse(client.getAdresse());
-//            clientEntity.setDateNaissance(client.getDateNaissance());
-//            clientEntity.setNumeroTelephone(client.getNumeroTelephone());
-//
-//            clientRepository.save(clientEntity);
-//
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
-//    }
+        try {
+            Formule formule = mapper.readValue(formuleJson, Formule.class);
+            Formule formuleEntity = new Formule();
+            formuleEntity.setId_formule(formule.getId_formule());
+            formuleEntity.setTitre(formule.getTitre());
+            formuleEntity.setDescription(formule.getDescription());
+            formuleEntity.setImagesList(formule.getImagesList());
+            formuleEntity.setNew(formule.isNew());
+            formuleEntity.setSlug(formule.getSlug());
+            formuleEntity.setAvantages(formule.getAvantages());
+            formuleEntity.setOptions(formule.getOptions());
+            formuleEntity.setProduit(formule.getProduit());
+
+            formuleRepository.save(formuleEntity);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+    @KafkaListener(topics = "option-info", groupId = "user-group")
+    public void receiveOption(String optionJson) {
+        System.out.println("Option message: " + optionJson);
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            Option option = mapper.readValue(optionJson, Option.class);
+            Option optionEntity = new Option();
+            optionEntity.setId(option.getId());
+//            optionEntity.setId_option(option.getId_option());
+            optionEntity.setTitre(option.getTitre());
+            optionEntity.setDescription(option.getDescription());
+            optionEntity.setObligatory(option.isObligatory());
+            optionEntity.setMontantGarantie(option.getMontantGarantie());
+            optionEntity.setFranchise(option.getFranchise());
+            optionEntity.setPrixOption(option.getPrixOption());
+            optionEntity.setFormules(option.getFormules());
+
+            optionRepository.save(optionEntity);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Vehicule ajouterVehicule(Vehicule vehicule, int idClient) {
         vehicule.setIdClient(idClient);
@@ -115,10 +142,21 @@ public class ContratService {
         Client client = clientRepository.findById(idClient).orElse(null);
         List<Contrat> contrats = contratRepository.findByIdClient(idClient);
         List<Vehicule> vehicules = vehiculeRepository.findByIdClient(idClient);
+
         Map<String, Object> result = new HashMap<>();
         result.put("client", client);
         result.put("contrats", contrats);
         //result.put("vehicules", vehicules);
+
+        List<Long> optionFormuleIds = contrats.stream()
+                .flatMap(contrat -> contrat.getOptionFormules().stream())
+                .collect(Collectors.toList());
+        System.out.println("################## IDS #############"+optionFormuleIds);
+
+        List<Option> options = optionRepository.findAllByIdIn(optionFormuleIds);
+
+        result.put("options", options);
+
         return result;
     }
 }

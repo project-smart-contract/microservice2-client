@@ -119,6 +119,7 @@ public class ContratService {
         //result.put("vehicules", vehicules);
         return result;
     }
+    }
 
 //    @Autowired
 //    private ContratRepository contratRepository;

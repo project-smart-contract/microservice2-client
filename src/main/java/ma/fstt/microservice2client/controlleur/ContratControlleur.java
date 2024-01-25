@@ -30,16 +30,16 @@ public class ContratControlleur {
 //
 //    return contratService.createContractWithSectionsAndVehicles(contrat);
 //}
-    @PostMapping("/ajouterContrat")
-    public Contrat ajouterContrat(@RequestBody Contrat contrat) {
-        int idClient = contrat.getIdClient();
-        return contratService.ajouterContrat(contrat, idClient);
-    }
+//    @PostMapping("/ajouterContrat")
+//    public Contrat ajouterContrat(@RequestBody Contrat contrat) {
+//        int idClient = contrat.getIdClient();
+//        return contratService.ajouterContrat(contrat, idClient);
+//    }
 
-    @PostMapping("/ajouterContratF")
+    @PostMapping("/ajouterContrat")
     public Contrat ajouterContratF(@RequestBody Contrat contrat) {
         int idClient = contrat.getIdClient();
-        int idFormule = contrat.getIdFormule();
+        Long idFormule = contrat.getIdFormule();
         List<Long> optionList = contrat.getOptionFormules();
         return contratService.ajouterContratF(contrat, idClient,idFormule,optionList);
     }

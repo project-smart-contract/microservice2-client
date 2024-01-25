@@ -23,7 +23,7 @@ public class Contrat {
     private Date dateEcheance;
     private int idClient;
     private  boolean isActive ;
-    private  int idFormule ;
+    private  Long idFormule ;
 
     @ManyToMany
     @JoinTable(

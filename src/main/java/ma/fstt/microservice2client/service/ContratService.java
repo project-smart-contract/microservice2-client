@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,14 +33,16 @@ public class ContratService {
     private FormuleRepository formuleRepository;
     @Autowired
     private OptionRepository optionRepository;
+    @Autowired
+    private ProduitRepository produitRepository;
 
 
-    public Contrat ajouterContrat(Contrat contrat, int idClient) {
-        contrat.setIdClient(idClient);
-        return contratRepository.save(contrat);
-    }
+//    public Contrat ajouterContrat(Contrat contrat, int idClient) {
+//        contrat.setIdClient(idClient);
+//        return contratRepository.save(contrat);
+//    }
 
-    public Contrat ajouterContratF(Contrat contrat, int idClient,int idFormule, List<Long> optionList) {
+    public Contrat ajouterContratF(Contrat contrat, int idClient,Long idFormule, List<Long> optionList) {
         contrat.setIdClient(idClient);
         contrat.setIdFormule(idFormule);
         contrat.setOptionFormules(optionList);
@@ -60,6 +63,7 @@ public class ContratService {
     public void listen(String message) {
         System.out.println("Received message: " + message);
         ObjectMapper mapper = new ObjectMapper();
+
         try {
             Client client = mapper.readValue(message, Client.class);
             Client clientEntity = new Client();
@@ -133,12 +137,36 @@ public class ContratService {
         }
     }
 
+    @KafkaListener(topics = "produit-info", groupId = "user-group")
+    public void receiveProduit(String optionJson) {
+        System.out.println("Option message: " + optionJson);
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            Produit produit = mapper.readValue(optionJson, Produit.class);
+            Produit produitEntity = new Produit();
+            produitEntity.setId_produit(produit.getId_produit());
+            produitEntity.setTitre(produit.getTitre());
+            produitEntity.setDescription(produit.getDescription());
+            produitEntity.setTypeProduit(produit.getTypeProduit());
+            produitEntity.setFormules(produit.getFormules());
+
+            produitRepository.save(produit);
+
+
+//            produitRepository.save(produitEntity);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Vehicule ajouterVehicule(Vehicule vehicule, int idClient) {
         vehicule.setIdClient(idClient);
         return vehiculeRepository.save(vehicule);
     }
 
-    public Map<String, Object> getContratAndVehiculeByIdClient(int idClient) {
+    /*public Map<String, Object> getContratAndVehiculeByIdClient(int idClient) {
         Client client = clientRepository.findById(idClient).orElse(null);
         List<Contrat> contrats = contratRepository.findByIdClient(idClient);
         List<Vehicule> vehicules = vehiculeRepository.findByIdClient(idClient);
@@ -158,7 +186,50 @@ public class ContratService {
         result.put("options", options);
 
         return result;
+    }*/
+    public Map<String, Object> getContratAndVehiculeByIdClient(int idClient) {
+        Client client = clientRepository.findById(idClient).orElse(null);
+        List<Contrat> contrats = contratRepository.findByIdClient(idClient);
+        List<Vehicule> vehicules = vehiculeRepository.findByIdClient(idClient);
+
+        Map<String, Object> result = new HashMap<>();
+
+        List<Map<String, Object>> contratDetails = new ArrayList<>();
+
+        for (Contrat contrat : contrats) {
+            Formule formule = formuleRepository.findById(contrat.getIdFormule()).orElse(null);
+            Map<String, Object> contratMap = new HashMap<>();
+            contratMap.put("id", contrat.getId());
+            contratMap.put("typeUsage", contrat.getTypeUsage());
+            contratMap.put("numPolice", contrat.getNumPolice());
+            contratMap.put("client", client);
+            contratMap.put("vehicules", contrat.getVehicules());
+            contratMap.put("formule", formule);
+
+            List<Option> options = optionRepository.findAllByIdIn(contrat.getOptionFormules());
+            List<Map<String, Object>> optionDetails = options.stream()
+                    .map(option -> {
+                        Map<String, Object> optionMap = new HashMap<>();
+                        optionMap.put("id", option.getId());
+                        optionMap.put("titre", option.getTitre());
+                        optionMap.put("description", option.getDescription());
+                        optionMap.put("montant garantie", option.getMontantGarantie());
+                        optionMap.put("franchise", option.getFranchise());
+                        optionMap.put("prix option", option.getPrixOption());
+                        return optionMap;
+                    })
+                    .collect(Collectors.toList());
+
+            contratMap.put("options", optionDetails);
+
+            contratDetails.add(contratMap);
+        }
+
+        result.put("contrats", contratDetails);
+
+        return result;
     }
+
 }
 
 //    @Autowired
@@ -282,6 +353,7 @@ public class ContratService {
 //    }
 //    return contratRepository.save(contrat);
 //}
+
 
 
 

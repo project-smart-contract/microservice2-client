@@ -78,9 +78,9 @@ public class ContratService {
     @KafkaListener(topics = "formule-info", groupId = "user-group")
     public void receiveFormule(String formuleJson) {
         System.out.println("Received message: " + formuleJson);
-        //ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
 
-//        try {
+  try {
 //            Client client = mapper.readValue(formuleJson, Client.class);
 //            Client clientEntity = new Client();
 //            clientEntity.setId(client.getId());
